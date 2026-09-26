@@ -1438,52 +1438,57 @@ function BottomNav({
     {
       id: "accounts",
       label: "Accounts",
-      icon: <CurrencyCircleDollarIcon size={32} />,
+      icon: (
+        <CurrencyCircleDollarIcon size={39} />
+        // <img src="/home2.svg" alt="Transfer" className="w-10 h-10" />
+      ),
     },
     {
       id: "pay",
       label: "Pay & Transfer",
-      icon: <CurrencyCircleDollarArrow size={32} />,
+      icon: <img src="/tf2.svg" alt="Transfer" className="w-10 h-10" />,
     },
     {
       id: "deposit",
       label: "Deposit Checks",
       icon: (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.8}
-          className="w-6 h-6"
-        >
-          <rect x="2" y="5" width="20" height="14" rx="2" />
-          <line x1="2" y1="10" x2="22" y2="10" strokeLinecap="round" />
-          <path d="M12 14v-2M10 14h4" strokeLinecap="round" />
-        </svg>
+        // <svg
+        //   viewBox="0 0 24 24"
+        //   fill="none"
+        //   stroke="currentColor"
+        //   strokeWidth={1.8}
+        //   className="w-6 h-6"
+        // >
+        //   <rect x="2" y="5" width="20" height="14" rx="2" />
+        //   <line x1="2" y1="10" x2="22" y2="10" strokeLinecap="round" />
+        //   <path d="M12 14v-2M10 14h4" strokeLinecap="round" />
+        // </svg>
+        <img src="/deposit2.svg" alt="Bank of America" className="w-10 h-10" />
       ),
     },
     {
       id: "trade",
       label: "Trade",
       icon: (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.8}
-          className="w-6 h-6"
-        >
-          <polyline
-            points="22,7 13.5,15.5 8.5,10.5 2,17"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <polyline
-            points="16,7 22,7 22,13"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        // <svg
+        //   viewBox="0 0 24 24"
+        //   fill="none"
+        //   stroke="currentColor"
+        //   strokeWidth={1.8}
+        //   className="w-6 h-6"
+        // >
+        //   <polyline
+        //     points="22,7 13.5,15.5 8.5,10.5 2,17"
+        //     strokeLinecap="round"
+        //     strokeLinejoin="round"
+        //   />
+        //   <polyline
+        //     points="16,7 22,7 22,13"
+        //     strokeLinecap="round"
+        //     strokeLinejoin="round"
+        //   />
+        // </svg>
+        <img src="/trade2.svg" alt="Bank of America" className="w-10 h-10" />
       ),
     },
   ];
