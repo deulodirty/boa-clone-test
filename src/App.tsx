@@ -9,25 +9,29 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-// ── Brand assets: BOA striped logo mark ───────────────────────────────────────
-function BOAMark({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size * 0.6} viewBox="0 0 46 28" fill="none">
-      <rect x="0" y="0" width="46" height="9" fill="#E31837" />
-      <rect x="0" y="10" width="46" height="9" fill="#012169" />
-      <rect x="0" y="20" width="46" height="8" fill="#E31837" />
-    </svg>
-  );
+import { createContext, useContext } from "react";
+
+const AccountNumberVisibilityContext = createContext<{
+  showNumbers: boolean;
+  toggleNumbers: () => void;
+}>({ showNumbers: false, toggleNumbers: () => {} });
+
+function useAccountNumberVisibility() {
+  return useContext(AccountNumberVisibilityContext);
+}
+
+// Helper: renders account number as "••••1234" or "1234"
+function maskNumber(num: string, show: boolean) {
+  return show ? num : "••••" + num.slice(-4);
 }
 
 // Section divider bar (navy + red stripes like real BOA)
 function SectionBar() {
   return (
-    <div className="flex h-[5px] w-full">
-      <div className="flex-1 bg-[#012169]" />
-      <div className="w-16 bg-[#E31837]" />
+    <div className="flex h-[10px] w-full">
+      <div className="flex-1 bg-[#E31837]" />
+      <div className="w-36 bg-[#012169]" />
     </div>
   );
 }
@@ -39,16 +43,9 @@ const bankingAccounts = [
   {
     id: "chk",
     label: "My Checking",
-    number: "9408",
-    balance: 2146.13,
-    available: 2146.13,
-  },
-  {
-    id: "sav",
-    label: "Savings",
-    number: "9876",
-    balance: 2463.67,
-    available: 2463.67,
+    number: "381077449708",
+    balance: 246.13,
+    available: 246.13,
   },
 ];
 
@@ -97,6 +94,12 @@ const transactions: Record<
   { date: string; desc: string; amount: number; balance: number }[]
 > = {
   chk: [
+    {
+      date: "09/24/24",
+      desc: "TRANSFER KELLY ALLEN: Kelly Allen",
+      amount: -850.0,
+      balance: 246.13,
+    },
     {
       date: "09/24/24",
       desc: "DIRECT DEPOSIT EMPLOYER",
@@ -534,6 +537,8 @@ function AccountDetail({ account }: { account: AccountItem }) {
   const displayed = showAll ? txns : txns.slice(0, 5);
   const isCredit = account.id.startsWith("cc");
 
+  const { showNumbers, toggleNumbers } = useAccountNumberVisibility();
+
   return (
     <div className="min-h-screen bg-gray-50 pb-28">
       {/* Top: back + search + notif */}
@@ -543,16 +548,18 @@ function AccountDetail({ account }: { account: AccountItem }) {
       <div className="px-3 pt-2">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-4 pt-5 pb-4">
           <div className="flex items-start justify-between mb-4">
-            <h1 className="text-base font-bold text-gray-900">
-              {account.label} - {account.number}
+            <h1 className="text-base font-bold text-gray-600">
+              {account.label} - {account.number.slice(-4)}
             </h1>
-            <button className="text-xs font-bold text-[#E31837] tracking-wide">
-              EDIT
-            </button>
+            <div className="flex items-center gap-3">
+              <button className="text-xs text-blue-500/80 tracking-wide">
+                EDIT
+              </button>
+            </div>
           </div>
           <div className="text-center mb-2">
             <p className="text-4xl font-light text-gray-900">
-              <span className="text-2xl font-normal align-super text-gray-900">
+              <span className="text-2xl font-normal align-super text-gray-700">
                 $
               </span>
               {Math.abs(account.balance).toLocaleString("en-US", {
@@ -613,24 +620,81 @@ function AccountDetail({ account }: { account: AccountItem }) {
             </svg>
           </button>
           {showRouting && (
-            <div className="px-4 pb-4 text-sm text-gray-700 border-t border-gray-100">
-              <div className="flex justify-between py-2">
+            <div className="px-4 pb-4 text-sm text-gray-700 ">
+              {/* <div className="flex justify-between py-2">
                 <span className="text-gray-500">Account Name</span>
-                <span className="font-mono font-medium">BUDRO BG LLC</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-500">Account Number</span>
-                <span className="font-mono font-medium">
-                  {"••••" + account.number}
+                <span className="font-sans font-bold">BUDRO BG LLC</span>
+              </div> */}
+              <div className="flex justify-between py-2 border-b border-gray-200 pb-4">
+                <span className="text-gray-500 text-sm font-bold border-gray-100">
+                  Account Number
+                </span>
+                <span className="flex justify-center gap-2 font-sans font-bold">
+                  {maskNumber(account.number, showNumbers)}
+                  <button
+                    onClick={toggleNumbers}
+                    aria-label={
+                      showNumbers
+                        ? "Hide account number"
+                        : "Show account number"
+                    }
+                    className="text-gray-600"
+                  >
+                    {showNumbers ? (
+                      // eye-off icon
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        className="w-4 h-4"
+                      >
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
+                    ) : (
+                      // eye icon
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        className="w-4 h-4"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
                 </span>
               </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-500">Routing & Paper Number</span>
-                <span className="font-mono font-medium">021200339</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-500">Wire Routing Number</span>
-                <span className="font-mono font-medium">026009593</span>
+
+              <div className="pt-4 pb-2">
+                <p className="text-sm font-bold tracking-wider text-gray-500  mb-3">
+                  Routing Numbers
+                </p>
+                <div>
+                  <div>
+                    <div className="flex justify-between py-2">
+                      <span className="text-gray-500">Paper & Electronic</span>
+                      <span className="font-sans font-bold">021200339</span>
+                    </div>
+                    <p className="text-xs text-gray-400 mb-0.5 max-w-[95%]">
+                      Use this routing number to order checks, set up direct
+                      deposits, and outgoing payments to other financial
+                      institutions.
+                    </p>
+                  </div>
+                  <div className="border-t border-gray-100 mt-4">
+                    <div className="flex justify-between py-2">
+                      <span className="text-gray-500">Wires</span>
+                      <span className="font-sans font-bold">026009593</span>
+                    </div>
+                    <p className="text-xs text-gray-400 mb-0.5 max-w-[95%]">
+                      Use this routing number for all incoming wire transfers.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -652,17 +716,17 @@ function AccountDetail({ account }: { account: AccountItem }) {
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-gray-400 mb-0.5">{tx.date}</p>
-                    <p className="text-sm font-semibold text-gray-900 uppercase leading-snug">
+                    <p className="text-sm font-semibold text-gray-500 uppercase leading-snug max-w-27.5">
                       {tx.desc}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-gray-400">
                       {tx.amount < 0
                         ? `-$${Math.abs(tx.amount).toFixed(2)}`
                         : `$${tx.amount.toFixed(2)}`}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-600 font-medium">
                       ${tx.balance.toFixed(2)}
                     </p>
                   </div>
@@ -740,6 +804,9 @@ function AccountsList({
   const [bankingOpen, setBankingOpen] = useState(true);
   const [creditOpen, setCreditOpen] = useState(true);
   const [loansOpen, setLoansOpen] = useState(true);
+
+  // NEW
+  const { showNumbers } = useAccountNumberVisibility();
 
   return (
     <div className="min-h-full">
@@ -859,9 +926,9 @@ function AccountsList({
             onClick={() => setBankingOpen((v) => !v)}
             className="w-full flex items-center justify-between px-4 py-3.5"
           >
-            <p className="text-base font-bold text-gray-900">Banking</p>
+            <p className="text-xl font-extrabold text-gray-800">Banking</p>
             <div className="flex items-center gap-2">
-              <p className="text-base font-bold text-gray-900">
+              <p className="text-xl font-extrabold text-gray-800">
                 {fmtDollar(bankingTotal)}
               </p>
               <svg
@@ -887,10 +954,10 @@ function AccountsList({
           {bankingOpen && (
             <>
               <div className="px-4 pb-2 flex items-center justify-between">
-                <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+                <p className="text-sm font-bold tracking-widest text-gray-400 uppercase">
                   Bank of America
                 </p>
-                <img src="/boa-logo.jpg" alt="Banking" className="w-4 h-4" />
+                <img src="/boa-logo.jpg" alt="Banking" className="w-6 h-6" />
               </div>
               {bankingAccounts.map((acc, i) => (
                 <button
@@ -898,11 +965,11 @@ function AccountsList({
                   onClick={() => onSelectAccount(acc)}
                   className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < bankingAccounts.length - 1 ? "border-b border-gray-100" : ""}`}
                 >
-                  <p className="text-sm font-medium text-gray-800">
-                    {acc.label} - {acc.number}
+                  <p className="text-lg font-medium text-gray-800">
+                    {acc.label} - {maskNumber(acc.number, showNumbers)}
                   </p>
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-lg font-semibold text-gray-600">
                       {fmtDollar(acc.balance)}
                     </p>
                     <svg
@@ -934,9 +1001,9 @@ function AccountsList({
             onClick={() => setCreditOpen((v) => !v)}
             className="w-full flex items-center justify-between px-4 py-3.5"
           >
-            <p className="text-base font-bold text-gray-900">Credit Cards</p>
+            <p className="text-xl font-extrabold text-gray-800">Credit Cards</p>
             <div className="flex items-center gap-2">
-              <p className="text-base font-bold text-gray-900">
+              <p className="text-xl font-extrabold text-gray-800">
                 {fmtDollar(creditTotal)}
               </p>
               <svg
@@ -961,10 +1028,10 @@ function AccountsList({
           {creditOpen && (
             <>
               <div className="px-4 pb-2 flex items-center justify-between">
-                <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+                <p className="text-sm font-bold tracking-widest text-gray-400 uppercase">
                   Bank of America
                 </p>
-                <img src="/boa-logo.jpg" alt="Banking" className="w-4 h-4" />
+                <img src="/boa-logo.jpg" alt="Banking" className="w-6 h-6" />
               </div>
               {creditAccounts.map((acc, i) => (
                 <button
@@ -972,11 +1039,11 @@ function AccountsList({
                   onClick={() => onSelectAccount(acc)}
                   className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < creditAccounts.length - 1 ? "border-b border-gray-100" : ""}`}
                 >
-                  <p className="text-sm font-medium text-gray-800">
-                    {acc.label} - {acc.number}
+                  <p className="text-lg font-medium text-gray-600">
+                    {acc.label} - {maskNumber(acc.number, showNumbers)}
                   </p>
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-lg font-semibold text-gray-600">
                       {fmtDollar(acc.balance)}
                     </p>
                     <svg
@@ -1008,9 +1075,9 @@ function AccountsList({
             onClick={() => setLoansOpen((v) => !v)}
             className="w-full flex items-center justify-between px-4 py-3.5"
           >
-            <p className="text-base font-bold text-gray-900">Loans</p>
+            <p className="text-base font-extrabold text-gray-800">Loans</p>
             <div className="flex items-center gap-2">
-              <p className="text-base font-bold text-gray-900">
+              <p className="text-base font-extrabold text-gray-800">
                 {fmtDollar(creditTotal)}
               </p>
               <svg
@@ -1035,10 +1102,10 @@ function AccountsList({
           {loansOpen && (
             <>
               <div className="px-4 pb-2 flex items-center justify-between">
-                <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+                <p className="text-sm font-bold tracking-widest text-gray-400 uppercase">
                   Bank of America
                 </p>
-                <img src="/boa-logo.jpg" alt="Banking" className="w-4 h-4" />
+                <img src="/boa-logo.jpg" alt="Banking" className="w-6 h-6" />
               </div>
               {loansAccounts.map((acc, i) => (
                 <button
@@ -1046,11 +1113,11 @@ function AccountsList({
                   onClick={() => onSelectAccount(acc)}
                   className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < loansAccounts.length - 1 ? "border-b border-gray-100" : ""}`}
                 >
-                  <p className="text-sm font-medium text-gray-800">
-                    {acc.label} - {acc.number}
+                  <p className="text-lg font-medium text-gray-800">
+                    {acc.label} - {maskNumber(acc.number, showNumbers)}
                   </p>
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-lg font-semibold text-gray-600">
                       {fmtDollar(acc.balance)}
                     </p>
                     <svg
@@ -1406,6 +1473,13 @@ export default function App() {
   );
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // NEW: global show/hide state
+  const [showNumbers, setShowNumbers] = useState(false);
+
+  const toggleNumbers = () => setShowNumbers((v) => !v);
+
+  const providerValue = { showNumbers, toggleNumbers };
+
   if (!loggedIn) {
     return (
       <div className="max-w-md mx-auto">
@@ -1416,114 +1490,120 @@ export default function App() {
 
   if (selectedAccount) {
     return (
-      <div className="max-w-md mx-auto min-h-screen bg-gray-50">
-        <TopBar
-          onMenu={() => setMenuOpen(true)}
-          showBack
-          onBack={() => setSelectedAccount(null)}
-        />
-        <AccountDetail account={selectedAccount} />
-        <BottomNav active={tab} onChange={setTab} />
-      </div>
+      <AccountNumberVisibilityContext.Provider value={providerValue}>
+        <div className="max-w-md mx-auto min-h-screen bg-gray-50">
+          <TopBar
+            onMenu={() => setMenuOpen(true)}
+            showBack
+            onBack={() => setSelectedAccount(null)}
+          />
+          <AccountDetail account={selectedAccount} />
+          <BottomNav active={tab} onChange={setTab} />
+        </div>
+      </AccountNumberVisibilityContext.Provider>
     );
   }
 
   return (
-    <div className="max-w-md mx-auto min-h-screen bg-gray-50 mb-10">
-      {/* Slide-in Menu overlay */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 z-50 flex"
-          onClick={() => setMenuOpen(false)}
-        >
+    <AccountNumberVisibilityContext.Provider value={providerValue}>
+      <div className="max-w-md mx-auto min-h-screen bg-gray-50 mb-16">
+        {/* Slide-in Menu overlay */}
+        {menuOpen && (
           <div
-            className="w-72 bg-white h-full shadow-xl flex flex-col"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-50 flex"
+            onClick={() => setMenuOpen(false)}
           >
-            <div className="bg-[#012169] px-5 pt-12 pb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
-                  R
-                </div>
-                <div>
-                  <p className="text-white font-bold text-base">{USER.name}</p>
-                  <p className="text-white/70 text-xs">{USER.tier}</p>
+            <div
+              className="w-72 bg-white h-full shadow-xl flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-[#012169] px-5 pt-12 pb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
+                    R
+                  </div>
+                  <div>
+                    <p className="text-white font-bold text-base">
+                      {USER.name}
+                    </p>
+                    <p className="text-white/70 text-xs">{USER.tier}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            {[
-              "Home",
-              "Accounts",
-              "Card Manager",
-              "Life Plan®",
-              "Security Center",
-              "Help & Support",
-              "Locations & ATMs",
-              "Log Out",
-            ].map((item) => (
-              <button
-                key={item}
-                className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 active:bg-gray-50"
-              >
-                <span className="text-sm font-medium text-gray-800">
-                  {item}
-                </span>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#CCC"
-                  strokeWidth={2}
-                  className="w-4 h-4"
+              {[
+                "Home",
+                "Accounts",
+                "Card Manager",
+                "Life Plan®",
+                "Security Center",
+                "Help & Support",
+                "Locations & ATMs",
+                "Log Out",
+              ].map((item) => (
+                <button
+                  key={item}
+                  className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 active:bg-gray-50"
                 >
-                  <path
-                    d="M9 18l6-6-6-6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            ))}
+                  <span className="text-sm font-medium text-gray-800">
+                    {item}
+                  </span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#CCC"
+                    strokeWidth={2}
+                    className="w-4 h-4"
+                  >
+                    <path
+                      d="M9 18l6-6-6-6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              ))}
+            </div>
+            <div className="flex-1 bg-black/40" />
           </div>
-          <div className="flex-1 bg-black/40" />
-        </div>
-      )}
+        )}
 
-      <TopBar onMenu={() => setMenuOpen(true)} />
+        <TopBar onMenu={() => setMenuOpen(true)} />
 
-      {tab === "accounts" && (
-        <>
-          <AccountsDashboardTabs active={subtab} onChange={setSubtab} />
-          {/* SearchBar as its own separate rounded section */}
-          <SearchBar />
-          <div className="px-3 pt-2">
-            <AccountsList onSelectAccount={setSelectedAccount} />
+        {tab === "accounts" && (
+          <>
+            <AccountsDashboardTabs active={subtab} onChange={setSubtab} />
+            {/* SearchBar as its own separate rounded section */}
+            <SearchBar />
+            <div className="px-3 pt-2">
+              <AccountsList onSelectAccount={setSelectedAccount} />
+            </div>
+          </>
+        )}
+
+        {tab === "pay" && (
+          <div className="px-3">
+            <SearchBar />
+            <PayTransfer />
           </div>
-        </>
-      )}
+        )}
 
-      {tab === "pay" && (
-        <div className="px-3">
-          <SearchBar />
-          <PayTransfer />
-        </div>
-      )}
+        {tab === "deposit" && (
+          <div className="px-3">
+            <SearchBar />
+            <DepositChecks />
+          </div>
+        )}
 
-      {tab === "deposit" && (
-        <div className="px-3">
-          <SearchBar />
-          <DepositChecks />
-        </div>
-      )}
+        {tab === "trade" && (
+          <div className="px-3">
+            <SearchBar />
+            <Trade />
+          </div>
+        )}
 
-      {tab === "trade" && (
-        <div className="px-3">
-          <SearchBar />
-          <Trade />
-        </div>
-      )}
-
-      <BottomNav active={tab} onChange={setTab} />
-    </div>
+        <BottomNav active={tab} onChange={setTab} />
+      </div>
+    </AccountNumberVisibilityContext.Provider>
   );
 }
 
