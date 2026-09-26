@@ -98,11 +98,17 @@ const transactions: Record<
       date: "09/25/26",
       desc: "ATM WITHDRAWAL",
       amount: 246.13,
-      balance: -1900,
+      balance: -500,
+    },
+    {
+      date: "09/25/26",
+      desc: "TRANSFER KELLY ALLEN: Kelly Allen",
+      amount: 746.13,
+      balance: -1400,
     },
     {
       date: "09/24/26",
-      desc: "DIRECT DEPOSIT",
+      desc: "BKOFAMERICA MOBILE DEPOSIT",
       amount: 2146.13,
       balance: 2850.0,
     },
@@ -630,8 +636,8 @@ function AccountDetail({ account }: { account: AccountItem }) {
                   Account Number
                 </span>
                 <span className="flex justify-center gap-2 font-sans font-bold">
-                  {maskNumber(account.number, showNumbers)}
-                  <button
+                  {account.number}
+                  {/* <button
                     onClick={toggleNumbers}
                     aria-label={
                       showNumbers
@@ -665,7 +671,7 @@ function AccountDetail({ account }: { account: AccountItem }) {
                         <circle cx="12" cy="12" r="3" />
                       </svg>
                     )}
-                  </button>
+                  </button> */}
                 </span>
               </div>
 
