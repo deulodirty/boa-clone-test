@@ -269,7 +269,7 @@ function TopBar({
           <div className="relative">
             <Mail className="w-6 h-6 text-[#555]" />
             {mailCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#012169] text-white text-[9px] font-bold rounded-sm flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-1 w-3 h-3 bg-[#3158b3] text-white text-[9px] font-bold rounded-sm flex items-center justify-center">
                 {mailCount}
               </span>
             )}
@@ -338,15 +338,11 @@ function SearchBar({ notifCount = 4 }: { notifCount?: number }) {
         <span className="text-sm text-gray-400">How can we help?</span>
       </div>
       <button className="relative shrink-0">
-        <div className="w-9 h-9 bg-[#E31837] rounded-full flex items-center justify-center">
-          <img
-            src="/boa-logo.png"
-            alt="Notifications"
-            className="w-6 h-6 ml-3"
-          />
+        <div className="w-7 h-7 bg-[#E31837] rounded-full flex items-center justify-center">
+          <img src="/boa-logo-t.png" alt="Notifications" className="w-5 h-5" />
         </div>
         {notifCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#012169] text-white text-[9px] font-bold rounded-sm flex items-center justify-center">
+          <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-[#3158b3] text-white text-[9px] font-medium rounded-sm flex items-center justify-center">
             {notifCount}
           </span>
         )}
@@ -1601,3 +1597,5 @@ function CurrencyCircleDollarArrow({ size = 24, color = "currentColor" }) {
     </svg>
   );
 }
+
+// git push -u origin main
