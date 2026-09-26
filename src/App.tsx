@@ -1491,7 +1491,7 @@ function BottomNav({
     },
     {
       id: "trade",
-      label: "Service",
+      label: "Services",
       icon: (
         // <svg
         //   viewBox="0 0 24 24"
