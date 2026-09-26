@@ -37,12 +37,15 @@ function SectionBar() {
 }
 
 // ── Mock Data ─────────────────────────────────────────────────────────────────
-const USER = { name: "Budro", tier: "Preferred Rewards Platinum Member" };
+const USER = {
+  name: "Budro BG LLC",
+  tier: "Preferred Rewards Platinum Member",
+};
 
 const bankingAccounts = [
   {
     id: "chk",
-    label: "My Checking",
+    label: "Business Adv Checking ",
     number: "381077449708",
     balance: 246.13,
     available: 246.13,
@@ -757,9 +760,9 @@ function AccountDetail({ account }: { account: AccountItem }) {
                     <p className="text-sm text-[#2b6ad0]  mt-1">
                       {fmtAmount(tx.amount)}
                     </p>
-                    {/* <p className="text-xs text-gray-600 font-medium">
+                    <p className="text-[10px] text-gray-600 font-medium">
                       {fmtAmount(tx.balance)}
-                    </p> */}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -862,9 +865,9 @@ function AccountsList({
         <button className="w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50">
           <div>
             <p className="text-base font-bold text-gray-900 text-left">
-              Hello, {USER.name}
+              {USER.name}
             </p>
-            <p className="text-xs text-gray-500 mt-0.5">{USER.tier}</p>
+            {/* <p className="text-xs text-gray-500 mt-0.5">{USER.tier}</p> */}
           </div>
           <svg
             viewBox="0 0 24 24"
@@ -880,7 +883,27 @@ function AccountsList({
             />
           </svg>
         </button>
-        <div className="border-t border-gray-100">
+        <div className="flex items-center justify-between gap-2 mx-4 py-3 border-t border-gray-200">
+          <p className="text-sm text-gray-600 flex-1 max-w-70">
+            You've been enjoying Preferred Rewards for business since Mar 2019.{" "}
+            <span className="text-xs text-blue-600">My Summary</span>
+          </p>
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#999"
+            strokeWidth={2}
+            className="w-4 h-4 shrink-0"
+          >
+            <path
+              d="M9 18l6-6-6-6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        {/* <div className="border-t border-gray-100">
           <button className="w-full flex items-center gap-3 px-4 py-3 active:bg-gray-50">
             <div className="w-7 h-7 rounded-full border-2 border-gray-400 flex items-center justify-center">
               <Send className="w-3.5 h-3.5 text-[#555] fill-black" />
@@ -907,8 +930,8 @@ function AccountsList({
               />
             </svg>
           </button>
-        </div>
-        <div className="border-t border-gray-100">
+        </div> */}
+        {/* <div className="border-t border-gray-100">
           <button className="w-full flex items-center justify-between px-4 py-3 active:bg-gray-50">
             <p className="text-sm font-semibold text-gray-900">My Rewards</p>
             <svg
@@ -954,7 +977,7 @@ function AccountsList({
               />
             </svg>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Show Net Worth */}
@@ -1012,10 +1035,10 @@ function AccountsList({
                   onClick={() => onSelectAccount(acc)}
                   className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < bankingAccounts.length - 1 ? "border-b border-gray-100" : ""}`}
                 >
-                  <p className="text-lg font-medium text-gray-800">
-                    {acc.label} - {maskNumber(acc.number, showNumbers)}
+                  <p className="text-lg font-medium text-gray-600 max-w-50 leading-snug text-left">
+                    {acc.label} - {acc.number.slice(-4)}
                   </p>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 shrink-0">
                     <p className="text-lg font-semibold text-gray-600">
                       {fmtDollar(acc.balance)}
                     </p>
@@ -1468,7 +1491,7 @@ function BottomNav({
     },
     {
       id: "trade",
-      label: "Trade",
+      label: "Service",
       icon: (
         // <svg
         //   viewBox="0 0 24 24"
