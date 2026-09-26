@@ -102,7 +102,7 @@ const transactions: Record<
     },
     {
       date: "09/25/26",
-      desc: "TRANSFER KELLY ALLEN: Kelly Allen",
+      desc: "TRANSFER KELLY ALLEN",
       amount: 746.13,
       balance: -1400,
     },
