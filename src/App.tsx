@@ -94,60 +94,78 @@ const transactions: Record<
   { date: string; desc: string; amount: number; balance: number }[]
 > = {
   chk: [
+    // Most recent — final balance = $246.13 ✅
     {
       date: "09/25/26",
-      desc: "ATM WITHDRAWAL",
-      amount: 246.13,
-      balance: -500,
+      desc: "ATM WITHDRAWAL 1234 MAIN ST",
+      amount: -100.0,
+      balance: 246.13,
     },
     {
-      date: "09/25/26",
+      date: "09/24/26",
       desc: "TRANSFER KELLY ALLEN",
-      amount: 746.13,
-      balance: -1400,
+      amount: -250.0,
+      balance: 346.13,
     },
     {
       date: "09/24/26",
       desc: "BKOFAMERICA MOBILE DEPOSIT",
-      amount: 2146.13,
-      balance: 2850.0,
+      amount: 1200.0,
+      balance: 596.13,
     },
     {
       date: "09/23/26",
       desc: "WHOLE FOODS MARKET",
       amount: -87.43,
-      balance: -703.87,
+      balance: -603.87,
+    },
+    {
+      date: "09/22/26",
+      desc: "CHIPOTLE MEXICAN GRILL",
+      amount: -14.75,
+      balance: -516.44,
     },
     {
       date: "09/21/26",
       desc: "SHELL OIL GAS STATION",
       amount: -62.1,
-      balance: -616.44,
+      balance: -501.69,
     },
     {
-      date: "09/21/26",
-      desc: "ATM WITHDRAWAL",
-      amount: -200.0,
-      balance: -554.34,
+      date: "09/20/26",
+      desc: "NETFLIX.COM",
+      amount: -15.99,
+      balance: -439.59,
     },
     {
-      date: "08/26/26",
+      date: "09/18/26",
+      desc: "ZELLE TRANSFER FROM MARCUS REED",
+      amount: 200.0,
+      balance: -423.6,
+    },
+    {
+      date: "09/17/26",
+      desc: "AMAZON.COM*AMZN MKT",
+      amount: -132.99,
+      balance: -623.6,
+    },
+    {
+      date: "09/15/26",
+      desc: "DIRECT DEPOSIT EMPLOYER PAYROLL",
+      amount: 2850.0,
+      balance: -490.61,
+    },
+    {
+      date: "09/14/26",
       desc: "AT&T WIRELESS PAYMENT",
       amount: -89.0,
-      balance: -354.34,
+      balance: -3340.61,
     },
     {
-      date: "08/18/26",
-      desc: "ZELLE TRANSFER RECEIVED",
-      amount: 200.0,
-      balance: -265.34,
-    },
-    { date: "08/17/26", desc: "AMAZON.COM", amount: -132.99, balance: -465.34 },
-    {
-      date: "08/10/26",
-      desc: "BKOFAMERICA MOBILE DEPOSIT",
-      amount: 500.0,
-      balance: -332.35,
+      date: "09/12/26",
+      desc: "VENMO CASHOUT",
+      amount: -400.0,
+      balance: -3251.61,
     },
   ],
   sav: [
@@ -545,6 +563,15 @@ function AccountDetail({ account }: { account: AccountItem }) {
 
   const { showNumbers, toggleNumbers } = useAccountNumberVisibility();
 
+  // Format transaction amounts: -$1,234.56 / $1,234.56
+  function fmtAmount(n: number) {
+    const abs = Math.abs(n).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    return n < 0 ? `-$${abs}` : `$${abs}`;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 pb-28">
       {/* Top: back + search + notif */}
@@ -727,14 +754,12 @@ function AccountDetail({ account }: { account: AccountItem }) {
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-sm font-semibold text-gray-400">
-                      {tx.amount < 0
-                        ? `-$${Math.abs(tx.amount).toFixed(2)}`
-                        : `$${tx.amount.toFixed(2)}`}
+                    <p className="text-sm text-[#2b6ad0]  mt-1">
+                      {fmtAmount(tx.amount)}
                     </p>
-                    <p className="text-xs text-gray-600 font-medium">
-                      ${tx.balance.toFixed(2)}
-                    </p>
+                    {/* <p className="text-xs text-gray-600 font-medium">
+                      {fmtAmount(tx.balance)}
+                    </p> */}
                   </div>
                 </div>
               ))}
@@ -759,32 +784,48 @@ function AccountDetail({ account }: { account: AccountItem }) {
             Spending & Budgeting
           </p>
           <div className="flex items-center gap-4">
-            {/* mini pie */}
-            <svg viewBox="-2 -2 40 40" className="w-16 h-16 shrink-0">
-              <circle cx="18" cy="18" r="15.9" fill="#eee" />
+            {/* mini pie — 5 unique colors, unequal segments, perfect circle */}
+            <svg viewBox="-2 -2 40 40" className="w-20 h-20 shrink-0">
+              <circle cx="18" cy="18" r="15.9" fill="#faf7f7" />
+
+              {/* Lemon-Lime — 90° (25%) — greenish-yellow, distinct from pure yellow */}
               <path
                 d="M18 2 A16 16 0 0 1 34 18"
                 fill="none"
-                stroke="#E31837"
-                strokeWidth="6"
+                stroke="#A3E635"
+                strokeWidth="8"
               />
+
+              {/* Green — 72° (20%) */}
               <path
-                d="M34 18 A16 16 0 0 1 20 33.9"
+                d="M34 18 A16 16 0 0 1 22.94 33.22"
                 fill="none"
-                stroke="#012169"
-                strokeWidth="6"
+                stroke="#16A34A"
+                strokeWidth="8"
               />
+
+              {/* Orange — 54° (15%) */}
               <path
-                d="M20 33.9 A16 16 0 0 1 2 18"
+                d="M22.94 33.22 A16 16 0 0 1 8.60 30.94"
                 fill="none"
-                stroke="#6B7280"
-                strokeWidth="6"
+                stroke="#F97316"
+                strokeWidth="8"
               />
+
+              {/* Yellow — 72° (20%) — true bright yellow */}
               <path
-                d="M2 18 A16 16 0 0 1 18 2"
+                d="M8.60 30.94 A16 16 0 0 1 2.78 12.94"
                 fill="none"
-                stroke="#E5E7EB"
-                strokeWidth="6"
+                stroke="#FACC15"
+                strokeWidth="8"
+              />
+
+              {/* Dark Purple — 72° (20%) */}
+              <path
+                d="M2.78 12.94 A16 16 0 0 1 18 2"
+                fill="none"
+                stroke="#4C1D95"
+                strokeWidth="8"
               />
             </svg>
             <p className="text-sm text-gray-600 leading-snug">
