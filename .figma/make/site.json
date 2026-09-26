@@ -1,0 +1,10 @@
+{
+  "description": "Experience a mobile-first banking dashboard that mimics the Bank of America interface, designed for educational purposes to enhance user interface understanding.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
