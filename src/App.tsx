@@ -1,21 +1,13 @@
-import { CurrencyCircleDollarIcon } from "@phosphor-icons/react";
-import {
-  ChevronLeft,
-  LogOut,
-  Mail,
-  Menu,
-  Send,
-  SettingsIcon,
-  ShoppingCart,
-} from "lucide-react";
-import { useState } from "react";
+import {CurrencyCircleDollarIcon} from "@phosphor-icons/react";
+import {ChevronLeft, LogOut, Mail, Menu, Send, SettingsIcon, ShoppingCart} from "lucide-react";
+import {useState} from "react";
 
-import { createContext, useContext } from "react";
+import {createContext, useContext} from "react";
 
 const AccountNumberVisibilityContext = createContext<{
   showNumbers: boolean;
   toggleNumbers: () => void;
-}>({ showNumbers: false, toggleNumbers: () => {} });
+}>({showNumbers: false, toggleNumbers: () => {}});
 
 function useAccountNumberVisibility() {
   return useContext(AccountNumberVisibilityContext);
@@ -47,8 +39,8 @@ const bankingAccounts = [
     id: "chk",
     label: "Business Adv Checking ",
     number: "381077449708",
-    balance: 246.13,
-    available: 246.13,
+    balance: 146.13,
+    available: 146.13,
   },
 ];
 
@@ -94,10 +86,16 @@ const loansAccounts = [
 
 const transactions: Record<
   string,
-  { date: string; desc: string; amount: number; balance: number }[]
+  {date: string; desc: string; amount: number; balance: number}[]
 > = {
   chk: [
     // Most recent — final balance = $246.13 ✅
+    {
+      date: "09/28/26",
+      desc: "AT&T WIRELESS",
+      amount: -100, // ← non-whole ATM amount
+      balance: 146.13, // ← the ONLY .13 in the entire array
+    },
     {
       date: "09/25/26",
       desc: "ATM WITHDRAWAL 1234 MAIN ST",
@@ -210,7 +208,7 @@ const transactions: Record<
     },
   ],
   cc1: [
-    { date: "09/24/24", desc: "NETFLIX.COM", amount: -15.99, balance: 3402.33 },
+    {date: "09/24/24", desc: "NETFLIX.COM", amount: -15.99, balance: 3402.33},
     {
       date: "09/22/24",
       desc: "CHIPOTLE MEXICAN GRILL",
@@ -229,7 +227,7 @@ const transactions: Record<
       amount: -6.85,
       balance: 3238.6,
     },
-    { date: "09/17/24", desc: "CVS PHARMACY", amount: -22.4, balance: 3231.75 },
+    {date: "09/17/24", desc: "CVS PHARMACY", amount: -22.4, balance: 3231.75},
     {
       date: "09/14/24",
       desc: "PAYMENT THANK YOU",
@@ -250,7 +248,7 @@ function fmtDollar(n: number, showSign = false) {
 }
 
 // ── Shared Top Bar ────────────────────────────────────────────────────────────
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 
 function TopBar({
   onMenu,
@@ -268,26 +266,17 @@ function TopBar({
       <div className="flex items-center gap-2">
         {/* Menu (always visible) */}
         {!showBack && (
-          <button
-            onClick={onMenu}
-            className="flex flex-col items-center gap-[3px] min-w-[44px]"
-          >
+          <button onClick={onMenu} className="flex flex-col items-center gap-[3px] min-w-[44px]">
             <span className="block w-5 h-[2px] bg-gray-700" />
             <span className="block w-5 h-[2px] bg-gray-700" />
             <span className="block w-5 h-[2px] bg-gray-700" />
-            <span className="text-[9px] text-gray-700 font-medium mt-0.5">
-              Menu
-            </span>
+            <span className="text-[9px] text-gray-700 font-medium mt-0.5">Menu</span>
           </button>
         )}
 
         {/* Back button — only when showBack is true */}
         {showBack && (
-          <button
-            onClick={onBack}
-            className="min-w-11 min-h-11 h-11"
-            aria-label="Go back"
-          >
+          <button onClick={onBack} className="min-w-11 min-h-11 h-11" aria-label="Go back">
             <ChevronLeft className="w-6 h-6 text-gray-700" />
           </button>
         )}
@@ -338,8 +327,7 @@ function AccountsDashboardTabs({
           key={t}
           onClick={() => onChange(t)}
           className="flex-1 py-3 text-sm font-semibold relative"
-          style={{ color: active === t ? "#E31837" : "#555" }}
-        >
+          style={{color: active === t ? "#E31837" : "#555"}}>
           {t === "accounts" ? "Accounts" : "Dashboard"}
           {active === t && (
             <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#E31837]" />
@@ -351,7 +339,7 @@ function AccountsDashboardTabs({
 }
 
 // Search bar — standalone rounded section
-function SearchBar({ notifCount = 4 }: { notifCount?: number }) {
+function SearchBar({notifCount = 4}: {notifCount?: number}) {
   return (
     <div className="flex items-center gap-2.5 px-3 pt-3 pb-1">
       <div className="flex-1 flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2">
@@ -360,8 +348,7 @@ function SearchBar({ notifCount = 4 }: { notifCount?: number }) {
           fill="none"
           stroke="#888"
           strokeWidth={2}
-          className="w-4 h-4 shrink-0"
-        >
+          className="w-4 h-4 shrink-0">
           <circle cx="11" cy="11" r="8" />
           <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
         </svg>
@@ -382,7 +369,7 @@ function SearchBar({ notifCount = 4 }: { notifCount?: number }) {
 }
 
 // ── Login Screen ──────────────────────────────────────────────────────────────
-function LoginScreen({ onLogin }: { onLogin: () => void }) {
+function LoginScreen({onLogin}: {onLogin: () => void}) {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [saveId, setSaveId] = useState(false);
@@ -413,9 +400,7 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
 
         {/* Form */}
         <div className="space-y-1 mb-5">
-          <label className="block text-sm font-semibold text-[#012169] mb-1">
-            User ID
-          </label>
+          <label className="block text-sm font-semibold text-[#012169] mb-1">User ID</label>
           <input
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
@@ -457,33 +442,25 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
 
         <button
           onClick={onLogin}
-          className="w-full bg-[#6B7280] hover:bg-[#4B5563] active:bg-[#374151] text-white font-bold py-3 rounded-full text-sm tracking-widest transition-colors"
-        >
+          className="w-full bg-[#6B7280] hover:bg-[#4B5563] active:bg-[#374151] text-white font-bold py-3 rounded-full text-sm tracking-widest transition-colors">
           LOG IN
         </button>
 
         <div className="text-center mt-4">
-          <button className="text-sm text-[#E31837] font-medium">
-            Forgot ID/Password
-          </button>
+          <button className="text-sm text-[#E31837] font-medium">Forgot ID/Password</button>
         </div>
       </div>
 
       {/* My Balance section */}
       <div className="mt-2 border-t border-gray-100 pt-4 pb-6 px-5 bg-gray-50 flex-1">
-        <h2 className="text-center text-sm font-semibold text-gray-800 mb-3">
-          My Balance ™
-        </h2>
+        <h2 className="text-center text-sm font-semibold text-gray-800 mb-3">My Balance ™</h2>
         <div className="grid grid-cols-2 gap-2">
           {[
             {
               title: "Zelle®",
               sub: "A safe way to send money to people you know",
               icon: (
-                <span
-                  className="text-xl font-black italic"
-                  style={{ color: "#6D1ED4" }}
-                >
+                <span className="text-xl font-black italic" style={{color: "#6D1ED4"}}>
                   Zelle
                 </span>
               ),
@@ -498,8 +475,7 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
                   fill="none"
                   stroke="#E31837"
                   strokeWidth={1.5}
-                  className="w-8 h-8"
-                >
+                  className="w-8 h-8">
                   <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                   <path d="M9 22V12h6v10" />
                 </svg>
@@ -525,22 +501,15 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
           ].map((card, i) => (
             <button
               key={i}
-              className="bg-white border border-gray-200 rounded-lg p-3 flex flex-col items-center text-center gap-1 active:bg-gray-50 transition-colors shadow-sm"
-            >
+              className="bg-white border border-gray-200 rounded-lg p-3 flex flex-col items-center text-center gap-1 active:bg-gray-50 transition-colors shadow-sm">
               {card.icon}
-              {card.title && (
-                <p className="text-sm font-bold text-gray-800">{card.title}</p>
-              )}
-              <p className="text-[11px] text-gray-500 leading-tight">
-                {card.sub}
-              </p>
+              {card.title && <p className="text-sm font-bold text-gray-800">{card.title}</p>}
+              <p className="text-[11px] text-gray-500 leading-tight">{card.sub}</p>
             </button>
           ))}
         </div>
         <div className="text-center mt-5">
-          <button className="text-sm text-[#E31837] font-medium">
-            Locations | Contact Us
-          </button>
+          <button className="text-sm text-[#E31837] font-medium">Locations | Contact Us</button>
         </div>
       </div>
     </div>
@@ -557,14 +526,14 @@ type AccountItem = {
   limit?: number;
 };
 
-function AccountDetail({ account }: { account: AccountItem }) {
+function AccountDetail({account}: {account: AccountItem}) {
   const [showRouting, setShowRouting] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const txns = transactions[account.id] ?? [];
   const displayed = showAll ? txns : txns.slice(0, 5);
   const isCredit = account.id.startsWith("cc");
 
-  const { showNumbers, toggleNumbers } = useAccountNumberVisibility();
+  const {showNumbers, toggleNumbers} = useAccountNumberVisibility();
 
   // Format transaction amounts: -$1,234.56 / $1,234.56
   function fmtAmount(n: number) {
@@ -588,16 +557,12 @@ function AccountDetail({ account }: { account: AccountItem }) {
               {account.label} - {account.number.slice(-4)}
             </h1>
             <div className="flex items-center gap-3">
-              <button className="text-xs text-blue-500/80 tracking-wide">
-                EDIT
-              </button>
+              <button className="text-xs text-blue-500/80 tracking-wide">EDIT</button>
             </div>
           </div>
           <div className="text-center mb-2">
             <p className="text-4xl font-light text-gray-900">
-              <span className="text-2xl font-normal align-super text-gray-700">
-                $
-              </span>
+              <span className="text-2xl font-normal align-super text-gray-700">$</span>
               {Math.abs(account.balance).toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
@@ -612,8 +577,7 @@ function AccountDetail({ account }: { account: AccountItem }) {
                 fill="none"
                 stroke="#888"
                 strokeWidth={2}
-                className="w-3.5 h-3.5"
-              >
+                className="w-3.5 h-3.5">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 8v4M12 16h.01" strokeLinecap="round" />
               </svg>
@@ -632,8 +596,7 @@ function AccountDetail({ account }: { account: AccountItem }) {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <button
             onClick={() => setShowRouting((v) => !v)}
-            className="w-full flex items-center justify-between px-4 py-3.5"
-          >
+            className="w-full flex items-center justify-between px-4 py-3.5">
             <span className="text-xs font-bold tracking-wider text-gray-500 uppercase">
               Account & Routing #
             </span>
@@ -646,13 +609,8 @@ function AccountDetail({ account }: { account: AccountItem }) {
               style={{
                 transform: showRouting ? "rotate(180deg)" : "none",
                 transition: "transform 0.2s",
-              }}
-            >
-              <path
-                d="M6 9l6 6 6-6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              }}>
+              <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
           {showRouting && (
@@ -716,9 +674,8 @@ function AccountDetail({ account }: { account: AccountItem }) {
                       <span className="font-sans font-bold">021200339</span>
                     </div>
                     <p className="text-xs text-gray-400 mb-0.5 max-w-[95%]">
-                      Use this routing number to order checks, set up direct
-                      deposits, and outgoing payments to other financial
-                      institutions.
+                      Use this routing number to order checks, set up direct deposits, and outgoing
+                      payments to other financial institutions.
                     </p>
                   </div>
                   <div className="border-t border-gray-100 mt-4">
@@ -746,10 +703,7 @@ function AccountDetail({ account }: { account: AccountItem }) {
             </p>
             <div className="divide-y divide-gray-100">
               {displayed.map((tx, i) => (
-                <div
-                  key={i}
-                  className="py-3 flex items-start justify-between gap-3"
-                >
+                <div key={i} className="py-3 flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-gray-400 mb-0.5">{tx.date}</p>
                     <p className="text-sm font-semibold text-gray-500 uppercase leading-snug max-w-27.5">
@@ -757,12 +711,8 @@ function AccountDetail({ account }: { account: AccountItem }) {
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-sm text-[#2b6ad0]  mt-1">
-                      {fmtAmount(tx.amount)}
-                    </p>
-                    <p className="text-[10px] text-gray-600 font-medium">
-                      {fmtAmount(tx.balance)}
-                    </p>
+                    <p className="text-sm text-[#2b6ad0]  mt-1">{fmtAmount(tx.amount)}</p>
+                    <p className="text-[10px] text-gray-600 font-medium">{fmtAmount(tx.balance)}</p>
                   </div>
                 </div>
               ))}
@@ -772,8 +722,7 @@ function AccountDetail({ account }: { account: AccountItem }) {
           {!showAll && txns.length > 5 && (
             <button
               onClick={() => setShowAll(true)}
-              className="w-full py-3 text-center text-sm font-bold text-gray-700 tracking-widest border-t border-gray-200 uppercase"
-            >
+              className="w-full py-3 text-center text-sm font-bold text-gray-700 tracking-widest border-t border-gray-200 uppercase">
               View All
             </button>
           )}
@@ -792,12 +741,7 @@ function AccountDetail({ account }: { account: AccountItem }) {
               <circle cx="18" cy="18" r="15.9" fill="#faf7f7" />
 
               {/* Lemon-Lime — 90° (25%) — greenish-yellow, distinct from pure yellow */}
-              <path
-                d="M18 2 A16 16 0 0 1 34 18"
-                fill="none"
-                stroke="#A3E635"
-                strokeWidth="8"
-              />
+              <path d="M18 2 A16 16 0 0 1 34 18" fill="none" stroke="#A3E635" strokeWidth="8" />
 
               {/* Green — 72° (20%) */}
               <path
@@ -832,9 +776,8 @@ function AccountDetail({ account }: { account: AccountItem }) {
               />
             </svg>
             <p className="text-sm text-gray-600 leading-snug">
-              On average, you spend{" "}
-              <span className="font-bold text-gray-900">$1,240/mo</span> in this
-              account
+              On average, you spend <span className="font-bold text-gray-900">$1,240/mo</span> in
+              this account
             </p>
           </div>
         </div>
@@ -844,11 +787,7 @@ function AccountDetail({ account }: { account: AccountItem }) {
 }
 
 // ── Accounts List ─────────────────────────────────────────────────────────────
-function AccountsList({
-  onSelectAccount,
-}: {
-  onSelectAccount: (a: AccountItem) => void;
-}) {
+function AccountsList({onSelectAccount}: {onSelectAccount: (a: AccountItem) => void}) {
   const bankingTotal = bankingAccounts.reduce((s, a) => s + a.balance, 0);
   const creditTotal = creditAccounts.reduce((s, a) => s + a.balance, 0);
   const [bankingOpen, setBankingOpen] = useState(true);
@@ -856,7 +795,7 @@ function AccountsList({
   const [loansOpen, setLoansOpen] = useState(true);
 
   // NEW
-  const { showNumbers } = useAccountNumberVisibility();
+  const {showNumbers} = useAccountNumberVisibility();
 
   return (
     <div className="min-h-full">
@@ -864,9 +803,7 @@ function AccountsList({
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <button className="w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50">
           <div>
-            <p className="text-base font-bold text-gray-900 text-left">
-              {USER.name}
-            </p>
+            <p className="text-base font-bold text-gray-900 text-left">{USER.name}</p>
             {/* <p className="text-xs text-gray-500 mt-0.5">{USER.tier}</p> */}
           </div>
           <svg
@@ -874,13 +811,8 @@ function AccountsList({
             fill="none"
             stroke="#999"
             strokeWidth={2}
-            className="w-4 h-4 shrink-0"
-          >
-            <path
-              d="M9 18l6-6-6-6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+            className="w-4 h-4 shrink-0">
+            <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
         <div className="flex items-center justify-between gap-2 mx-4 py-3 border-t border-gray-200">
@@ -894,13 +826,8 @@ function AccountsList({
             fill="none"
             stroke="#999"
             strokeWidth={2}
-            className="w-4 h-4 shrink-0"
-          >
-            <path
-              d="M9 18l6-6-6-6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+            className="w-4 h-4 shrink-0">
+            <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
         {/* <div className="border-t border-gray-100">
@@ -994,13 +921,10 @@ function AccountsList({
         <div>
           <button
             onClick={() => setBankingOpen((v) => !v)}
-            className="w-full flex items-center justify-between px-4 py-3.5"
-          >
+            className="w-full flex items-center justify-between px-4 py-3.5">
             <p className="text-xl font-extrabold text-gray-800">Banking</p>
             <div className="flex items-center gap-2">
-              <p className="text-xl font-extrabold text-gray-800">
-                {fmtDollar(bankingTotal)}
-              </p>
+              <p className="text-xl font-extrabold text-gray-800">{fmtDollar(bankingTotal)}</p>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -1010,13 +934,8 @@ function AccountsList({
                 style={{
                   transform: bankingOpen ? "none" : "rotate(180deg)",
                   transition: "transform 0.2s",
-                }}
-              >
-                <path
-                  d="M18 15l-6-6-6 6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                }}>
+                <path d="M18 15l-6-6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </button>
@@ -1033,27 +952,19 @@ function AccountsList({
                 <button
                   key={acc.id}
                   onClick={() => onSelectAccount(acc)}
-                  className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < bankingAccounts.length - 1 ? "border-b border-gray-100" : ""}`}
-                >
+                  className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < bankingAccounts.length - 1 ? "border-b border-gray-100" : ""}`}>
                   <p className="text-lg font-medium text-gray-600 max-w-50 leading-snug text-left">
                     {acc.label} - {acc.number.slice(-4)}
                   </p>
                   <div className="flex items-center gap-2 shrink-0">
-                    <p className="text-lg font-semibold text-gray-600">
-                      {fmtDollar(acc.balance)}
-                    </p>
+                    <p className="text-lg font-semibold text-gray-600">{fmtDollar(acc.balance)}</p>
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="#BBB"
                       strokeWidth={2}
-                      className="w-4 h-4"
-                    >
-                      <path
-                        d="M9 18l6-6-6-6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                      className="w-4 h-4">
+                      <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                 </button>
@@ -1069,13 +980,10 @@ function AccountsList({
         <div>
           <button
             onClick={() => setCreditOpen((v) => !v)}
-            className="w-full flex items-center justify-between px-4 py-3.5"
-          >
+            className="w-full flex items-center justify-between px-4 py-3.5">
             <p className="text-xl font-extrabold text-gray-800">Credit Cards</p>
             <div className="flex items-center gap-2">
-              <p className="text-xl font-extrabold text-gray-800">
-                {fmtDollar(creditTotal)}
-              </p>
+              <p className="text-xl font-extrabold text-gray-800">{fmtDollar(creditTotal)}</p>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -1085,13 +993,8 @@ function AccountsList({
                 style={{
                   transform: creditOpen ? "none" : "rotate(180deg)",
                   transition: "transform 0.2s",
-                }}
-              >
-                <path
-                  d="M18 15l-6-6-6 6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                }}>
+                <path d="M18 15l-6-6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </button>
@@ -1107,27 +1010,19 @@ function AccountsList({
                 <button
                   key={acc.id}
                   onClick={() => onSelectAccount(acc)}
-                  className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < creditAccounts.length - 1 ? "border-b border-gray-100" : ""}`}
-                >
+                  className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < creditAccounts.length - 1 ? "border-b border-gray-100" : ""}`}>
                   <p className="text-lg font-medium text-gray-600">
                     {acc.label} - {maskNumber(acc.number, showNumbers)}
                   </p>
                   <div className="flex items-center gap-2">
-                    <p className="text-lg font-semibold text-gray-600">
-                      {fmtDollar(acc.balance)}
-                    </p>
+                    <p className="text-lg font-semibold text-gray-600">{fmtDollar(acc.balance)}</p>
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="#BBB"
                       strokeWidth={2}
-                      className="w-4 h-4"
-                    >
-                      <path
-                        d="M9 18l6-6-6-6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                      className="w-4 h-4">
+                      <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                 </button>
@@ -1143,13 +1038,10 @@ function AccountsList({
         <div>
           <button
             onClick={() => setLoansOpen((v) => !v)}
-            className="w-full flex items-center justify-between px-4 py-3.5"
-          >
+            className="w-full flex items-center justify-between px-4 py-3.5">
             <p className="text-base font-extrabold text-gray-800">Loans</p>
             <div className="flex items-center gap-2">
-              <p className="text-base font-extrabold text-gray-800">
-                {fmtDollar(creditTotal)}
-              </p>
+              <p className="text-base font-extrabold text-gray-800">{fmtDollar(creditTotal)}</p>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -1159,13 +1051,8 @@ function AccountsList({
                 style={{
                   transform: loansOpen ? "none" : "rotate(180deg)",
                   transition: "transform 0.2s",
-                }}
-              >
-                <path
-                  d="M18 15l-6-6-6 6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                }}>
+                <path d="M18 15l-6-6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </button>
@@ -1181,27 +1068,19 @@ function AccountsList({
                 <button
                   key={acc.id}
                   onClick={() => onSelectAccount(acc)}
-                  className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < loansAccounts.length - 1 ? "border-b border-gray-100" : ""}`}
-                >
+                  className={`w-full flex items-center justify-between px-4 py-3.5 active:bg-gray-50 transition-colors ${i < loansAccounts.length - 1 ? "border-b border-gray-100" : ""}`}>
                   <p className="text-lg font-medium text-gray-800">
                     {acc.label} - {maskNumber(acc.number, showNumbers)}
                   </p>
                   <div className="flex items-center gap-2">
-                    <p className="text-lg font-semibold text-gray-600">
-                      {fmtDollar(acc.balance)}
-                    </p>
+                    <p className="text-lg font-semibold text-gray-600">{fmtDollar(acc.balance)}</p>
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="#BBB"
                       strokeWidth={2}
-                      className="w-4 h-4"
-                    >
-                      <path
-                        d="M9 18l6-6-6-6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
+                      className="w-4 h-4">
+                      <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                 </button>
@@ -1219,11 +1098,11 @@ function AccountsList({
 // ── Pay & Transfer ─────────────────────────────────────────────────────────────
 function PayTransfer() {
   const options = [
-    { label: "Transfer between my accounts", icon: "⇄" },
-    { label: "Pay bills", icon: "🏦" },
-    { label: "Send & receive with Zelle®", icon: "Z", purple: true },
-    { label: "Wire transfer", icon: "📡" },
-    { label: "Loan payment", icon: "💳" },
+    {label: "Transfer between my accounts", icon: "⇄"},
+    {label: "Pay bills", icon: "🏦"},
+    {label: "Send & receive with Zelle®", icon: "Z", purple: true},
+    {label: "Wire transfer", icon: "📡"},
+    {label: "Loan payment", icon: "💳"},
   ];
 
   return (
@@ -1235,8 +1114,7 @@ function PayTransfer() {
         {options.map((opt) => (
           <button
             key={opt.label}
-            className="w-full flex items-center gap-4 px-4 py-4 active:bg-gray-50 transition-colors"
-          >
+            className="w-full flex items-center gap-4 px-4 py-4 active:bg-gray-50 transition-colors">
             <div
               className="w-10 h-10 rounded-full flex items-center justify-center text-base shrink-0"
               style={{
@@ -1244,42 +1122,29 @@ function PayTransfer() {
                 color: "white",
                 fontWeight: 900,
                 fontStyle: "italic",
-              }}
-            >
+              }}>
               {opt.icon}
             </div>
-            <p className="flex-1 text-sm font-medium text-gray-800 text-left">
-              {opt.label}
-            </p>
+            <p className="flex-1 text-sm font-medium text-gray-800 text-left">{opt.label}</p>
             <svg
               viewBox="0 0 24 24"
               fill="none"
               stroke="#BBB"
               strokeWidth={2}
-              className="w-4 h-4 shrink-0"
-            >
-              <path
-                d="M9 18l6-6-6-6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              className="w-4 h-4 shrink-0">
+              <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         ))}
       </div>
       <div className="px-1 pt-5">
-        <h2 className="text-base font-bold text-gray-900 mb-3">
-          Recent Transfers
-        </h2>
+        <h2 className="text-base font-bold text-gray-900 mb-3">Recent Transfers</h2>
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden divide-y divide-gray-100">
           {[
-            { name: "Budro BG LLC (Zelle)", date: "07/31/24", amount: -69.48 },
-            { name: "Checking → Savings", date: "07/20/24", amount: -200.0 },
+            {name: "Budro BG LLC (Zelle)", date: "07/31/24", amount: -69.48},
+            {name: "Checking → Savings", date: "07/20/24", amount: -200.0},
           ].map((t) => (
-            <div
-              key={t.name}
-              className="flex items-center justify-between px-4 py-3.5"
-            >
+            <div key={t.name} className="flex items-center justify-between px-4 py-3.5">
               <div>
                 <p className="text-sm font-medium text-gray-900">{t.name}</p>
                 <p className="text-xs text-gray-400 mt-0.5">{t.date}</p>
@@ -1309,18 +1174,14 @@ function DepositChecks() {
             fill="none"
             stroke="#E31837"
             strokeWidth={1.5}
-            className="w-10 h-10"
-          >
+            className="w-10 h-10">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
             <line x1="1" y1="10" x2="23" y2="10" />
           </svg>
         </div>
-        <p className="text-base font-bold text-gray-900 mb-2">
-          Mobile Check Deposit
-        </p>
+        <p className="text-base font-bold text-gray-900 mb-2">Mobile Check Deposit</p>
         <p className="text-sm text-gray-500 mb-6 max-w-xs mx-auto">
-          Take a photo of the front and back of your check to deposit it
-          instantly.
+          Take a photo of the front and back of your check to deposit it instantly.
         </p>
         <button className="bg-[#E31837] text-white font-bold py-3 px-8 rounded-full text-sm active:bg-[#C01030] transition-colors">
           Deposit a Check
@@ -1343,17 +1204,12 @@ function DepositChecks() {
               amount: 250.0,
             },
           ].map((d, i) => (
-            <div
-              key={i}
-              className="flex items-center justify-between px-4 py-3.5"
-            >
+            <div key={i} className="flex items-center justify-between px-4 py-3.5">
               <div>
                 <p className="text-sm font-medium text-gray-900">{d.desc}</p>
                 <p className="text-xs text-gray-400 mt-0.5">{d.date}</p>
               </div>
-              <p className="text-sm font-semibold text-green-700">
-                +${d.amount.toFixed(2)}
-              </p>
+              <p className="text-sm font-semibold text-green-700">+${d.amount.toFixed(2)}</p>
             </div>
           ))}
         </div>
@@ -1399,9 +1255,7 @@ function Trade() {
           Portfolio Value
         </p>
         <p className="text-3xl font-light text-gray-900">{fmtDollar(total)}</p>
-        <p className="text-xs text-green-600 font-semibold mt-0.5">
-          ▲ +$42.17 today
-        </p>
+        <p className="text-xs text-green-600 font-semibold mt-0.5">▲ +$42.17 today</p>
       </div>
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <SectionBar />
@@ -1409,8 +1263,7 @@ function Trade() {
           {holdings.map((h) => (
             <button
               key={h.ticker}
-              className="w-full flex items-center justify-between px-4 py-4 active:bg-gray-50"
-            >
+              className="w-full flex items-center justify-between px-4 py-4 active:bg-gray-50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-[#012169] flex items-center justify-center text-white text-xs font-black shrink-0">
                   {h.ticker.slice(0, 2)}
@@ -1421,12 +1274,9 @@ function Trade() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm font-bold text-gray-900">
-                  {fmtDollar(h.shares * h.price)}
-                </p>
+                <p className="text-sm font-bold text-gray-900">{fmtDollar(h.shares * h.price)}</p>
                 <p
-                  className={`text-xs font-semibold ${h.change > 0 ? "text-green-600" : "text-red-600"}`}
-                >
+                  className={`text-xs font-semibold ${h.change > 0 ? "text-green-600" : "text-red-600"}`}>
                   {h.change > 0 ? "+" : ""}
                   {h.change.toFixed(2)} today
                 </p>
@@ -1450,14 +1300,8 @@ function Trade() {
 // ── Bottom Navigation ─────────────────────────────────────────────────────────
 type Tab = "accounts" | "pay" | "deposit" | "trade";
 
-function BottomNav({
-  active,
-  onChange,
-}: {
-  active: Tab;
-  onChange: (t: Tab) => void;
-}) {
-  const tabs: { id: Tab; label: string; icon: JSX.Element }[] = [
+function BottomNav({active, onChange}: {active: Tab; onChange: (t: Tab) => void}) {
+  const tabs: {id: Tab; label: string; icon: JSX.Element}[] = [
     {
       id: "accounts",
       label: "Accounts",
@@ -1524,8 +1368,7 @@ function BottomNav({
             key={t.id}
             onClick={() => onChange(t.id)}
             className="flex-1 flex flex-col items-center gap-0.5 py-2.5 active:bg-gray-50"
-            style={{ color: active === t.id ? "#2f07f4" : "#6B7280" }}
-          >
+            style={{color: active === t.id ? "#2f07f4" : "#6B7280"}}>
             {t.icon}
             <span className="text-[9px] font-semibold leading-tight text-center px-0.5">
               {t.label}
@@ -1533,7 +1376,7 @@ function BottomNav({
           </button>
         ))}
       </div>
-      <div style={{ paddingBottom: "env(safe-area-inset-bottom)" }} />
+      <div style={{paddingBottom: "env(safe-area-inset-bottom)"}} />
     </nav>
   );
 }
@@ -1543,9 +1386,7 @@ export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [tab, setTab] = useState<Tab>("accounts");
   const [subtab, setSubtab] = useState<"accounts" | "dashboard">("accounts");
-  const [selectedAccount, setSelectedAccount] = useState<AccountItem | null>(
-    null,
-  );
+  const [selectedAccount, setSelectedAccount] = useState<AccountItem | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   // NEW: global show/hide state
@@ -1553,7 +1394,7 @@ export default function App() {
 
   const toggleNumbers = () => setShowNumbers((v) => !v);
 
-  const providerValue = { showNumbers, toggleNumbers };
+  const providerValue = {showNumbers, toggleNumbers};
 
   if (!loggedIn) {
     return (
@@ -1584,23 +1425,17 @@ export default function App() {
       <div className="max-w-md mx-auto min-h-screen bg-gray-50 mb-16">
         {/* Slide-in Menu overlay */}
         {menuOpen && (
-          <div
-            className="fixed inset-0 z-50 flex"
-            onClick={() => setMenuOpen(false)}
-          >
+          <div className="fixed inset-0 z-50 flex" onClick={() => setMenuOpen(false)}>
             <div
               className="w-72 bg-white h-full shadow-xl flex flex-col"
-              onClick={(e) => e.stopPropagation()}
-            >
+              onClick={(e) => e.stopPropagation()}>
               <div className="bg-[#012169] px-5 pt-12 pb-5">
                 <div className="flex items-center gap-3">
                   <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
                     R
                   </div>
                   <div>
-                    <p className="text-white font-bold text-base">
-                      {USER.name}
-                    </p>
+                    <p className="text-white font-bold text-base">{USER.name}</p>
                     <p className="text-white/70 text-xs">{USER.tier}</p>
                   </div>
                 </div>
@@ -1617,23 +1452,15 @@ export default function App() {
               ].map((item) => (
                 <button
                   key={item}
-                  className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 active:bg-gray-50"
-                >
-                  <span className="text-sm font-medium text-gray-800">
-                    {item}
-                  </span>
+                  className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 active:bg-gray-50">
+                  <span className="text-sm font-medium text-gray-800">{item}</span>
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="#CCC"
                     strokeWidth={2}
-                    className="w-4 h-4"
-                  >
-                    <path
-                      d="M9 18l6-6-6-6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
+                    className="w-4 h-4">
+                    <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
               ))}
@@ -1682,15 +1509,14 @@ export default function App() {
   );
 }
 
-function CurrencyCircleDollarArrow({ size = 24, color = "currentColor" }) {
+function CurrencyCircleDollarArrow({size = 24, color = "currentColor"}) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 256 256"
       width={size}
       height={size}
-      fill={color}
-    >
+      fill={color}>
       {/* Circle + $ from Phosphor CurrencyCircleDollar */}
       <circle
         cx="112"
